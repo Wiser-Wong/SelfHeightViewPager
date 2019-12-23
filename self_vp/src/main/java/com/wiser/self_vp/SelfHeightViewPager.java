@@ -1,14 +1,11 @@
 package com.wiser.self_vp;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 /**
@@ -18,43 +15,54 @@ import androidx.viewpager.widget.ViewPager;
  */
 public class SelfHeightViewPager extends ViewPager {
 
-	private HashMap<Integer, Integer>	map	= new LinkedHashMap<>();
+	private boolean isCanScroll;
 
-	private int							currentPage;
-
-	public SelfHeightViewPager(@NonNull Context context) {
-		super(context);
-	}
-
-	public SelfHeightViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
+	public SelfHeightViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
 	@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		if (getChildCount() > 0 && getChildCount() > currentPage) {
-			View child = getChildAt(currentPage);
-			child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-			int h = child.getMeasuredHeight();
-			if (map != null && !map.containsKey(currentPage)) map.put(currentPage, h);
-			heightMeasureSpec = MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY);
-		}
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		View view = getChildAt(getCurrentItem());
+		if (view != null) {
+			view.measure(widthMeasureSpec, heightMeasureSpec);
+		}
+
+		setMeasuredDimension(getMeasuredWidth(), measureHeight(heightMeasureSpec, view));
 	}
 
-	/**
-	 * 在切换tab的时候，重置ViewPager的高度
-	 *
-	 * @param current
-	 */
-	public void resetHeight(int current) {
-		this.currentPage = current;
-		MarginLayoutParams params = (MarginLayoutParams) getLayoutParams();
-		setLayoutParams(params);
+	private int measureHeight(int measureSpec, View view) {
+		int result = 0;
+		int specMode = MeasureSpec.getMode(measureSpec);
+		int specSize = MeasureSpec.getSize(measureSpec);
+
+		if (specMode == MeasureSpec.EXACTLY) {
+			result = specSize;
+		} else {
+			// set the height from the base view if available
+			if (view != null) {
+				result = view.getMeasuredHeight();
+			}
+			if (specMode == MeasureSpec.AT_MOST) {
+				result = Math.min(result, specSize);
+			}
+		}
+		return result;
 	}
 
-	@Override protected void onDetachedFromWindow() {
-		super.onDetachedFromWindow();
-		if (map != null) map.clear();
-		map = null;
+	@Override public boolean onInterceptTouchEvent(MotionEvent ev) {
+		return isCanScroll && super.onInterceptTouchEvent(ev);
+	}
+
+	@SuppressLint("ClickableViewAccessibility") @Override public boolean onTouchEvent(MotionEvent ev) {
+		return isCanScroll && super.onTouchEvent(ev);
+	}
+
+	public boolean isCanScroll() {
+		return isCanScroll;
+	}
+
+	public void setCanScroll(boolean isCanScroll) {
+		this.isCanScroll = isCanScroll;
 	}
 }

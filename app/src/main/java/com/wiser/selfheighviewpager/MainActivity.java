@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         vp = findViewById(R.id.vp);
         vp.setAdapter(new VpAdapter(getSupportFragmentManager(),0,fragments));
-
+        vp.setOffscreenPageLimit(fragments.size());
         vp.addOnPageChangeListener(this);
     }
 
@@ -40,17 +40,23 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         return list;
     }
 
+
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
 
     @Override
     public void onPageSelected(int position) {
-        vp.resetHeight(position);
+        vp.requestLayout();
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    public void switchTab(View view) {
+        vp.setCurrentItem(1,false);
     }
 }
