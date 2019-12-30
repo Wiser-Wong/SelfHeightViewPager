@@ -8,15 +8,18 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.wiser.self_vp.SelfHeightViewPager;
+import com.wiser.self_vp.SelfHeightViewPagerN;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
-    SelfHeightViewPager vp;
+    SelfHeightViewPagerN vp;
 
     List<Fragment> fragments = new ArrayList<>();
+
+    int count = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        vp.requestLayout();
+        vp.resetHeight(position);
     }
 
     @Override
@@ -57,6 +60,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     public void switchTab(View view) {
-        vp.setCurrentItem(1,false);
+        vp.setCurrentItem((count >= 0 && count < fragments.size() - 1) ? count ++ : (count == fragments.size() - 1 ? count-- : 0),false);
     }
 }

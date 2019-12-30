@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SelfHeightViewPager">
+        <attr name="svp_scroll" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="SelfHeightViewPagerN">
+        <attr name="svpn_scroll" format="boolean"/>
+    </declare-styleable>
+</resources>

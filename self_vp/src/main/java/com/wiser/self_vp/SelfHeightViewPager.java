@@ -2,6 +2,7 @@ package com.wiser.self_vp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +20,13 @@ public class SelfHeightViewPager extends ViewPager {
 
 	public SelfHeightViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		init(context, attrs);
+	}
+
+	private void init(Context context, AttributeSet attrs) {
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SelfHeightViewPager);
+		isCanScroll = ta.getBoolean(R.styleable.SelfHeightViewPager_svp_scroll, isCanScroll);
+		ta.recycle();
 	}
 
 	@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
