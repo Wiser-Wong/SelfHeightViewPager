@@ -10,7 +10,7 @@
       }
 
         dependencies {
-              implementation 'com.github.Wiser-Wong:SelfHeightViewPager:1.0.0'
+              implementation 'com.github.Wiser-Wong:SelfHeightViewPager:1.1.0'
       }
 
 ## 使用说明
